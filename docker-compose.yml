@@ -1,0 +1,18 @@
+# 不想注册 Neon/Supabase 的话，用这个在本地开一个 Postgres：
+#   docker compose up -d
+# .env.local 里填：DATABASE_URL="postgres://postgres:postgres@localhost:5432/makan_finder"
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: makan_finder
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
