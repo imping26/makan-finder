@@ -72,7 +72,9 @@ export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
  * ────────────────────────────────────────────────────────────── */
 
 const timestamps = {
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
     .notNull()
@@ -117,8 +119,12 @@ export const account = pgTable(
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at", { withTimezone: true }),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { withTimezone: true }),
+    accessTokenExpiresAt: timestamp("access_token_expires_at", {
+      withTimezone: true,
+    }),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+      withTimezone: true,
+    }),
     scope: text("scope"),
     password: text("password"),
     ...timestamps,
@@ -140,7 +146,10 @@ export const verification = pgTable("verification", {
 
 /** 0 = Sunday … 6 = Saturday. 时间用 "HH:mm" 24 小时制。closed 表示当天休息。 */
 export type OpeningHours = Partial<
-  Record<"0" | "1" | "2" | "3" | "4" | "5" | "6", { open: string; close: string } | { closed: true }>
+  Record<
+    "0" | "1" | "2" | "3" | "4" | "5" | "6",
+    { open: string; close: string } | { closed: true }
+  >
 >;
 
 export const restaurants = pgTable(
@@ -165,7 +174,9 @@ export const restaurants = pgTable(
     avgRating: real("avg_rating").default(0).notNull(),
     reviewCount: integer("review_count").default(0).notNull(),
     status: restaurantStatusEnum("status").default("approved").notNull(),
-    createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
+    createdBy: text("created_by").references(() => user.id, {
+      onDelete: "set null",
+    }),
     ...timestamps,
   },
   (t) => [
@@ -207,7 +218,9 @@ export const favorites = pgTable(
     restaurantId: uuid("restaurant_id")
       .notNull()
       .references(() => restaurants.id, { onDelete: "cascade" }),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (t) => [primaryKey({ columns: [t.userId, t.restaurantId] })],
 );
@@ -220,8 +233,12 @@ export const photos = pgTable(
       .notNull()
       .references(() => restaurants.id, { onDelete: "cascade" }),
     url: text("url").notNull(),
-    uploadedBy: text("uploaded_by").references(() => user.id, { onDelete: "set null" }),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    uploadedBy: text("uploaded_by").references(() => user.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (t) => [index("photos_restaurant_idx").on(t.restaurantId)],
 );
@@ -239,21 +256,33 @@ export const restaurantRelations = relations(restaurants, ({ many, one }) => ({
   reviews: many(reviews),
   favorites: many(favorites),
   photos: many(photos),
-  creator: one(user, { fields: [restaurants.createdBy], references: [user.id] }),
+  creator: one(user, {
+    fields: [restaurants.createdBy],
+    references: [user.id],
+  }),
 }));
 
 export const reviewRelations = relations(reviews, ({ one }) => ({
-  restaurant: one(restaurants, { fields: [reviews.restaurantId], references: [restaurants.id] }),
+  restaurant: one(restaurants, {
+    fields: [reviews.restaurantId],
+    references: [restaurants.id],
+  }),
   user: one(user, { fields: [reviews.userId], references: [user.id] }),
 }));
 
 export const favoriteRelations = relations(favorites, ({ one }) => ({
-  restaurant: one(restaurants, { fields: [favorites.restaurantId], references: [restaurants.id] }),
+  restaurant: one(restaurants, {
+    fields: [favorites.restaurantId],
+    references: [restaurants.id],
+  }),
   user: one(user, { fields: [favorites.userId], references: [user.id] }),
 }));
 
 export const photoRelations = relations(photos, ({ one }) => ({
-  restaurant: one(restaurants, { fields: [photos.restaurantId], references: [restaurants.id] }),
+  restaurant: one(restaurants, {
+    fields: [photos.restaurantId],
+    references: [restaurants.id],
+  }),
 }));
 
 /* Inferred types — 在组件和 queries 里直接用 */

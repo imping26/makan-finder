@@ -15,11 +15,11 @@ cp .env.example .env.local      # 填入 DATABASE_URL
 
 **数据库三选一：**
 
-| 选项 | 步骤 |
-|---|---|
-| Neon（推荐，免费） | neon.tech 建项目 → Connect → 复制 connection string 填进 `.env.local` |
-| Supabase（免费） | Project Settings → Database → Connection string |
-| 本地 Docker | `docker compose up -d`，然后 `DATABASE_URL="postgres://postgres:postgres@localhost:5432/makan_finder"` |
+| 选项               | 步骤                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| Neon（推荐，免费） | neon.tech 建项目 → Connect → 复制 connection string 填进 `.env.local`                                  |
+| Supabase（免费）   | Project Settings → Database → Connection string                                                        |
+| 本地 Docker        | `docker compose up -d`，然后 `DATABASE_URL="postgres://postgres:postgres@localhost:5432/makan_finder"` |
 
 ```bash
 npm run db:migrate    # 建表（用 drizzle/ 里已生成好的 migration）
@@ -30,17 +30,17 @@ npm run dev           # http://localhost:3000
 
 ## Scripts
 
-| 命令 | 作用 |
-|---|---|
-| `npm run dev` | 开发服务器 |
-| `npm run build` | Production build |
-| `npm run typecheck` | TypeScript 检查 |
-| `npm run lint` | ESLint |
-| `npm run db:generate` | 改了 schema 后生成新的 migration |
-| `npm run db:migrate` | 执行 migration |
-| `npm run db:push` | 原型阶段直接同步 schema（不生成 migration 文件） |
-| `npm run db:seed` | 清空并重新写入示范数据 |
-| `npm run db:studio` | Drizzle Studio |
+| 命令                  | 作用                                             |
+| --------------------- | ------------------------------------------------ |
+| `npm run dev`         | 开发服务器                                       |
+| `npm run build`       | Production build                                 |
+| `npm run typecheck`   | TypeScript 检查                                  |
+| `npm run lint`        | ESLint                                           |
+| `npm run db:generate` | 改了 schema 后生成新的 migration                 |
+| `npm run db:migrate`  | 执行 migration                                   |
+| `npm run db:push`     | 原型阶段直接同步 schema（不生成 migration 文件） |
+| `npm run db:seed`     | 清空并重新写入示范数据                           |
+| `npm run db:studio`   | Drizzle Studio                                   |
 
 ## 示范数据
 

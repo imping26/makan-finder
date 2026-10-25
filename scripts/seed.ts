@@ -9,7 +9,12 @@ import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "../src/lib/db/schema";
-import { HOURS, REVIEW_TEMPLATES, SEED_RESTAURANTS, SEED_USERS } from "./seed-data";
+import {
+  HOURS,
+  REVIEW_TEMPLATES,
+  SEED_RESTAURANTS,
+  SEED_USERS,
+} from "./seed-data";
 
 config({ path: ".env.local" });
 
@@ -30,7 +35,7 @@ function rng(seed: number) {
   };
 }
 const rand = rng(2026);
-const pick = <T,>(arr: readonly T[]) => arr[Math.floor(rand() * arr.length)];
+const pick = <T>(arr: readonly T[]) => arr[Math.floor(rand() * arr.length)];
 
 export function slugify(input: string) {
   return input
@@ -90,7 +95,9 @@ async function main() {
   const now = Date.now();
   for (const { id: restaurantId } of inserted) {
     // 每家 0-6 条评论，每个 user 最多一条（符合 unique index）
-    const reviewers = [...SEED_USERS].sort(() => rand() - 0.5).slice(0, Math.floor(rand() * 7));
+    const reviewers = [...SEED_USERS]
+      .sort(() => rand() - 0.5)
+      .slice(0, Math.floor(rand() * 7));
     for (const u of reviewers) {
       const rating = randomRating();
       const createdAt = new Date(now - Math.floor(rand() * 180) * 86_400_000);
@@ -119,9 +126,13 @@ async function main() {
   `;
 
   console.log("❤️  Inserting favorites…");
-  await db.insert(schema.favorites).values(
-    inserted.slice(0, 5).map(({ id }) => ({ userId: SEED_USERS[1].id, restaurantId: id })),
-  );
+  await db
+    .insert(schema.favorites)
+    .values(
+      inserted
+        .slice(0, 5)
+        .map(({ id }) => ({ userId: SEED_USERS[1].id, restaurantId: id })),
+    );
 
   console.log(
     `✅ Done: ${SEED_USERS.length} users, ${inserted.length} restaurants, ${reviewRows.length} reviews`,
