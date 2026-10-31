@@ -1,34 +1,58 @@
+import {
+  FilterBar,
+  FilterBarSkeleton,
+} from "@/components/restaurants/filter-bar";
+import { Pagination } from "@/components/restaurants/pagination";
 import { RestaurantCard } from "@/components/restaurants/restaurant-card";
-import { getRestaurants } from "@/lib/queries/restaurants";
+import {
+  getRestaurants,
+  type RestaurantFilters,
+} from "@/lib/queries/restaurants";
+import { parseRestaurantFilters } from "@/lib/validations/restaurant-filters";
+import Link from "next/link";
 import { Suspense } from "react";
 
 export default function RestaurantsPage({
   searchParams,
 }: PageProps<"/restaurants">) {
+  const filtersPromise = searchParams.then(parseRestaurantFilters);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">Restaurants</h1>
 
+      <Suspense fallback={<FilterBarSkeleton />}>
+        <FilterBar filtersPromise={filtersPromise} />
+      </Suspense>
+
       <Suspense fallback={<p>Loading…</p>}>
-        <RestaurantGrid searchParams={searchParams} />
+        <RestaurantGrid filtersPromise={filtersPromise} />
       </Suspense>
     </div>
   );
 }
 
 async function RestaurantGrid({
-  searchParams,
-}: Pick<PageProps<"/restaurants">, "searchParams">) {
-  const allSearchParams = await searchParams;
-  const rawPage = allSearchParams.page;
-  const pageStr = Array.isArray(rawPage) ? rawPage[0] : rawPage;
-  const parsed = Number(pageStr);
-  const page = Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+  filtersPromise,
+}: {
+  filtersPromise: Promise<RestaurantFilters>;
+}) {
+  const filters = await filtersPromise;
+  const { items, total, page, pageCount } = await getRestaurants(filters);
 
-  const { items, total, pageCount } = await getRestaurants({ page });
+  if (total === 0) {
+    return <p className="text-muted-foreground">No restaurants found.</p>;
+  }
 
   if (items.length === 0) {
-    return <p className="text-muted-foreground">No restaurants found.</p>;
+    return (
+      <p className="text-muted-foreground">
+        Page {page} doesn&apos;t exist.{" "}
+        <Link href="/restaurants" className="underline">
+          Back to page 1
+        </Link>
+      </p>
+    );
   }
 
   return (
@@ -41,6 +65,8 @@ async function RestaurantGrid({
           <RestaurantCard key={restaurant.id} restaurant={restaurant} />
         ))}
       </div>
+
+      <Pagination page={page} pageCount={pageCount} filters={filters} />
     </>
   );
 }
