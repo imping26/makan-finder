@@ -1,4 +1,3 @@
-/** "kuala-lumpur" → "Kuala Lumpur" */
 export function formatSlugLabel(value: string) {
   return value
     .split("-")
@@ -13,7 +12,6 @@ export function truncate(text: string, max: number) {
   return `${lastSpace > 0 ? cut.slice(0, lastSpace) : cut}…`;
 }
 
-/** 1 → "RM", 3 → "RMRMRM" */
 export function formatPriceRange(priceRange: number) {
   return "RM".repeat(priceRange);
 }

@@ -82,9 +82,6 @@ export async function getRestaurantBySlug(slug: string) {
   return restaurant ?? null;
 }
 
-/**
- * 给 generateStaticParams 用：build 时要 prerender 哪些 slug。
- */
 export async function getAllRestaurantSlugs() {
   "use cache";
   cacheLife("hours");

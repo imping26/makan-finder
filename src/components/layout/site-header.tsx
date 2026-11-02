@@ -8,7 +8,6 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
 ] as const;
 
-// Server Component：没有 "use client"。只有 NavLink 需要知道当前路径，所以只有它是 client
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
