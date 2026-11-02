@@ -11,8 +11,13 @@ import {
   type RestaurantFilters,
 } from "@/lib/queries/restaurants";
 import { parseRestaurantFilters } from "@/lib/validations/restaurant-filters";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Restaurants",
+};
 
 export default function RestaurantsPage({
   searchParams,

@@ -4,15 +4,30 @@ import Link from "next/link";
 import { ArrowLeft, MapPin, Star } from "lucide-react";
 import { OpeningHours } from "@/components/restaurants/opening-hours";
 import { ReviewList } from "@/components/restaurants/review-list";
-import { formatPriceRange, formatSlugLabel } from "@/lib/format";
+import { formatPriceRange, formatSlugLabel, truncate } from "@/lib/format";
 import {
   getAllRestaurantSlugs,
   getRestaurantBySlug,
 } from "@/lib/queries/restaurants";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 export async function generateStaticParams() {
   return getAllRestaurantSlugs();
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/restaurants/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const restaurant = await getRestaurantBySlug(slug);
+  if (!restaurant) return { title: "Restaurant not found" };
+
+  return {
+    title: restaurant.name,
+    description: truncate(restaurant.description, 155),
+    alternates: { canonical: `/restaurants/${slug}` },
+  };
 }
 
 export default function RestaurantPage({
