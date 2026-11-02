@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { RestaurantDetailsSkeleton } from "@/components/restaurants/restaurant-details-skeleton";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Star } from "lucide-react";
 import { OpeningHours } from "@/components/restaurants/opening-hours";
@@ -27,7 +28,7 @@ export default function RestaurantPage({
         All restaurants
       </Link>
 
-      <Suspense fallback={<p>Loading…</p>}>
+      <Suspense fallback={<RestaurantDetailsSkeleton />}>
         <RestaurantDetails params={params} />
       </Suspense>
     </div>

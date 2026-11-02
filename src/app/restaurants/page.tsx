@@ -4,8 +4,10 @@ import {
 } from "@/components/restaurants/filter-bar";
 import { Pagination } from "@/components/restaurants/pagination";
 import { RestaurantCard } from "@/components/restaurants/restaurant-card";
+import { RestaurantGridSkeleton } from "@/components/restaurants/restaurant-grid-skeleton";
 import {
   getRestaurants,
+  PAGE_SIZE,
   type RestaurantFilters,
 } from "@/lib/queries/restaurants";
 import { parseRestaurantFilters } from "@/lib/validations/restaurant-filters";
@@ -25,7 +27,7 @@ export default function RestaurantsPage({
         <FilterBar filtersPromise={filtersPromise} />
       </Suspense>
 
-      <Suspense fallback={<p>Loading…</p>}>
+      <Suspense fallback={<RestaurantGridSkeleton count={PAGE_SIZE} />}>
         <RestaurantGrid filtersPromise={filtersPromise} />
       </Suspense>
     </div>

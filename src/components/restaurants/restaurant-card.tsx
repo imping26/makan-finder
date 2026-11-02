@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import type { Restaurant } from "@/lib/db/schema";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatPriceRange, formatSlugLabel } from "@/lib/format";
 
 type RestaurantCardProps = {
@@ -56,5 +57,19 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         </span>
       </div>
     </Link>
+  );
+}
+
+export function RestaurantCardSkeleton() {
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border p-4">
+      <Skeleton className="h-5 w-3/4" />
+      <Skeleton className="h-4 w-1/2" />
+      <div className="mt-auto flex items-center gap-3">
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="h-4 w-14" />
+        <Skeleton className="ml-auto h-4 w-10" />
+      </div>
+    </div>
   );
 }
