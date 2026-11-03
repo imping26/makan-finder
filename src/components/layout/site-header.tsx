@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { UtensilsCrossed } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { NavLink } from "./nav-link";
+import { UserMenu, UserMenuSkeleton } from "../auth/user-menu";
+import { Suspense } from "react";
 
 const NAV_ITEMS = [
   { href: "/restaurants", label: "Restaurants" },
@@ -26,9 +27,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto">
-          <Button asChild size="sm" variant="outline">
-            <Link href="/sign-in">Sign in</Link>
-          </Button>
+          <Suspense fallback={<UserMenuSkeleton />}>
+            <UserMenu />
+          </Suspense>
         </div>
       </div>
     </header>
