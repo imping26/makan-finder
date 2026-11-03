@@ -16,10 +16,6 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-/* ──────────────────────────────────────────────────────────────
- * Enums
- * ────────────────────────────────────────────────────────────── */
-
 export const MALAYSIAN_STATES = [
   "johor",
   "kedah",
@@ -64,12 +60,6 @@ export const restaurantStatusEnum = pgEnum("restaurant_status", [
   "rejected",
 ]);
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
-
-/* ──────────────────────────────────────────────────────────────
- * Auth tables (Better Auth core schema: user / session / account / verification)
- * 第 3 周装 Better Auth 时，跑 `npx @better-auth/cli generate` 对比一下，
- * 如果字段有出入，以 CLI 生成的为准。
- * ────────────────────────────────────────────────────────────── */
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -144,11 +134,6 @@ export const verification = pgTable(
   (t) => [index("verification_identifier_idx").on(t.identifier)],
 );
 
-/* ──────────────────────────────────────────────────────────────
- * App tables
- * ────────────────────────────────────────────────────────────── */
-
-/** 0 = Sunday … 6 = Saturday. 时间用 "HH:mm" 24 小时制。closed 表示当天休息。 */
 export type OpeningHours = Partial<
   Record<
     "0" | "1" | "2" | "3" | "4" | "5" | "6",
@@ -167,14 +152,12 @@ export const restaurants = pgTable(
     city: text("city").notNull(),
     address: text("address").notNull(),
     cuisine: cuisineEnum("cuisine").notNull(),
-    /** 1 = RM, 2 = RM RM, 3 = RM RM RM */
     priceRange: integer("price_range").notNull(),
     isHalal: boolean("is_halal").default(false).notNull(),
     lat: doublePrecision("lat"),
     lng: doublePrecision("lng"),
     openingHours: jsonb("opening_hours").$type<OpeningHours>(),
     coverImage: text("cover_image"),
-    /** 冗余字段：写评论时同步更新，列表页排序不用每次 AVG() */
     avgRating: real("avg_rating").default(0).notNull(),
     reviewCount: integer("review_count").default(0).notNull(),
     status: restaurantStatusEnum("status").default("approved").notNull(),
@@ -206,7 +189,6 @@ export const reviews = pgTable(
     ...timestamps,
   },
   (t) => [
-    // 每人每家只能评一次
     uniqueIndex("reviews_restaurant_user_idx").on(t.restaurantId, t.userId),
     index("reviews_restaurant_created_idx").on(t.restaurantId, t.createdAt),
     check("rating_check", sql`${t.rating} between 1 and 5`),
@@ -247,10 +229,6 @@ export const photos = pgTable(
   (t) => [index("photos_restaurant_idx").on(t.restaurantId)],
 );
 
-/* ──────────────────────────────────────────────────────────────
- * Relations（让 db.query.restaurants.findFirst({ with: { reviews: true } }) 可用）
- * ────────────────────────────────────────────────────────────── */
-
 export const userRelations = relations(user, ({ many }) => ({
   reviews: many(reviews),
   favorites: many(favorites),
@@ -289,7 +267,6 @@ export const photoRelations = relations(photos, ({ one }) => ({
   }),
 }));
 
-/* Inferred types — 在组件和 queries 里直接用 */
 export type Restaurant = typeof restaurants.$inferSelect;
 export type NewRestaurant = typeof restaurants.$inferInsert;
 export type Review = typeof reviews.$inferSelect;
