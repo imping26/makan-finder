@@ -1,7 +1,7 @@
 "use server";
 
 import { and, eq } from "drizzle-orm";
-import { refresh } from "next/cache";
+import { refresh, updateTag } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { favorites, restaurants } from "@/lib/db/schema";
@@ -65,6 +65,7 @@ export async function setFavorite(
     return { ok: false, message: "Couldn't update your favourites." };
   }
 
+  updateTag(`favorites:${user.id}`);
   refresh();
   return { ok: true };
 }

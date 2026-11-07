@@ -105,6 +105,7 @@ export async function saveReview(
 
   updateTag(`restaurant:${slug}`);
   updateTag("restaurants");
+  updateTag(`reviews:${user.id}`);
 
   return {
     status: "success",
@@ -173,6 +174,7 @@ export async function deleteReview(
 
   updateTag(`restaurant:${slug}`);
   updateTag("restaurants");
+  updateTag(`reviews:${user.id}`);
 
   return { status: "success", message: "Review deleted" };
 }

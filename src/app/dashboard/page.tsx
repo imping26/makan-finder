@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { MyReviewList } from "@/components/dashboard/my-review-list";
+import { RestaurantCard } from "@/components/restaurants/restaurant-card";
+import { getMyFavorites } from "@/lib/queries/favorites";
+import { getMyReviews } from "@/lib/queries/reviews";
 import { getCurrentUser } from "@/lib/session";
 
 export const metadata: Metadata = {
@@ -28,10 +32,41 @@ async function DashboardContent() {
     redirect("/sign-in?callbackUrl=/dashboard");
   }
 
+  const [favourites, reviews] = await Promise.all([
+    getMyFavorites(),
+    getMyReviews(),
+  ]);
+
   return (
-    <p className="mt-4 text-muted-foreground">
-      Welcome back{user ? `, ${user.name}` : ""}. Favourites and reviews coming
-      soon.
-    </p>
+    <div className="mt-6 flex flex-col gap-10">
+      <p className="text-muted-foreground">Welcome back, {user.name}.</p>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">
+          My favourites{" "}
+          <span className="text-muted-foreground">({favourites.length})</span>
+        </h2>
+        {favourites.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            No favourites yet. Tap <span aria-hidden>♡</span> Save on a
+            restaurant to keep it here.
+          </p>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {favourites.map((restaurant) => (
+              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">
+          My reviews{" "}
+          <span className="text-muted-foreground">({reviews.length})</span>
+        </h2>
+        <MyReviewList reviews={reviews} />
+      </section>
+    </div>
   );
 }
