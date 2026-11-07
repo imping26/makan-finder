@@ -15,6 +15,10 @@ import {
   ReviewFormSection,
   ReviewFormSkeleton,
 } from "@/components/restaurants/review-form-section";
+import {
+  FavoriteSection,
+  FavoriteSkeleton,
+} from "@/components/restaurants/favorite-section";
 
 export async function generateStaticParams() {
   return getAllRestaurantSlugs();
@@ -72,6 +76,14 @@ async function RestaurantDetails({
               Halal
             </span>
           )}
+          <div className="ml-auto">
+            <Suspense fallback={<FavoriteSkeleton />}>
+              <FavoriteSection
+                restaurantId={restaurant.id}
+                slug={restaurant.slug}
+              />
+            </Suspense>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
           <span className="flex items-center gap-1">
