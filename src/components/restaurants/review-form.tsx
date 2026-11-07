@@ -42,7 +42,7 @@ export function ReviewForm({ restaurantId, defaultValues }: ReviewFormProps) {
 
       <fieldset className="flex flex-col gap-1">
         <legend className="mb-1 text-sm text-muted-foreground">Rating</legend>
-        <div className="flex flex-row-reverse justify-end gap-1">
+        <div className="flex flex-row-reverse justify-end gap-1 [&_label:has(:checked)_svg]:fill-amber-400 [&_label:has(:checked)_svg]:text-amber-400 [&_label:has(:checked)~label_svg]:fill-amber-400 [&_label:has(:checked)~label_svg]:text-amber-400">
           {[5, 4, 3, 2, 1].map((n) => (
             <label key={n} className="cursor-pointer">
               <input
@@ -52,7 +52,7 @@ export function ReviewForm({ restaurantId, defaultValues }: ReviewFormProps) {
                 defaultChecked={values?.rating === n}
                 className="peer sr-only"
               />
-              <Star className="size-6 text-muted-foreground/40 peer-checked:fill-amber-400 peer-checked:text-amber-400 peer-focus-visible:ring-2 peer-focus-visible:ring-ring" />
+              <Star className="size-6 rounded-sm text-muted-foreground/40 peer-focus-visible:ring-2 peer-focus-visible:ring-ring" />
               <span className="sr-only">{n} stars</span>
             </label>
           ))}
