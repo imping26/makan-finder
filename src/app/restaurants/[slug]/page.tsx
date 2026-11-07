@@ -11,6 +11,10 @@ import {
 } from "@/lib/queries/restaurants";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import {
+  ReviewFormSection,
+  ReviewFormSkeleton,
+} from "@/components/restaurants/review-form-section";
 
 export async function generateStaticParams() {
   return getAllRestaurantSlugs();
@@ -92,6 +96,10 @@ async function RestaurantDetails({
       <div className="grid gap-8 md:grid-cols-[1fr_280px]">
         <section>
           <h2 className="mb-2 text-lg font-semibold">Reviews</h2>
+          <Suspense fallback={<ReviewFormSkeleton />}>
+            <ReviewFormSection restaurantId={restaurant.id} />
+          </Suspense>
+
           <ReviewList reviews={restaurant.reviews} />
         </section>
         <aside>
