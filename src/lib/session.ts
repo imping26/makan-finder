@@ -1,5 +1,6 @@
 import "server-only";
 import { headers } from "next/headers";
+import { connection } from "next/server";
 import { auth } from "@/lib/auth";
 
 export type CurrentUser = {
@@ -10,6 +11,8 @@ export type CurrentUser = {
 };
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
+  await connection();
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
