@@ -19,6 +19,10 @@ import {
   FavoriteSection,
   FavoriteSkeleton,
 } from "@/components/restaurants/favorite-section";
+import {
+  OpenNowBadge,
+  OpenNowBadgeSkeleton,
+} from "@/components/restaurants/open-now-badge";
 
 export async function generateStaticParams() {
   return getAllRestaurantSlugs();
@@ -76,6 +80,10 @@ async function RestaurantDetails({
               Halal
             </span>
           )}
+          <Suspense fallback={<OpenNowBadgeSkeleton />}>
+            <OpenNowBadge hours={restaurant.openingHours} />
+          </Suspense>
+
           <div className="ml-auto">
             <Suspense fallback={<FavoriteSkeleton />}>
               <FavoriteSection
