@@ -18,7 +18,9 @@
     "format:check": "prettier --check .",
     "lint:fix": "eslint --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "e2e:prepare": "tsx scripts/e2e-prepare.ts"
   },
   "dependencies": {
     "better-auth": "^1.7.15",
@@ -39,6 +41,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^22.20.5",
     "@types/react": "^19",
