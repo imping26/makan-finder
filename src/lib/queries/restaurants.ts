@@ -5,6 +5,7 @@ import {
   restaurants,
   type Cuisine,
   type MalaysianState,
+  type Restaurant,
 } from "@/lib/db/schema";
 import { cacheLife, cacheTag } from "next/cache";
 
@@ -80,6 +81,23 @@ export async function getRestaurantBySlug(slug: string) {
   });
 
   return restaurant ?? null;
+}
+
+export async function getPopularRestaurants(limit = 6): Promise<Restaurant[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("restaurants");
+
+  return db
+    .select()
+    .from(restaurants)
+    .where(eq(restaurants.status, "approved"))
+    .orderBy(
+      desc(restaurants.avgRating),
+      desc(restaurants.reviewCount),
+      asc(restaurants.id),
+    )
+    .limit(limit);
 }
 
 export async function getAllRestaurantSlugs() {
