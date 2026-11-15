@@ -9,6 +9,7 @@ import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "../src/lib/db/schema";
+import { slugify } from "../src/lib/slug";
 import {
   HOURS,
   REVIEW_TEMPLATES,
@@ -36,15 +37,6 @@ function rng(seed: number) {
 }
 const rand = rng(2026);
 const pick = <T>(arr: readonly T[]) => arr[Math.floor(rand() * arr.length)];
-
-export function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/[\s_-]+/g, "-");
-}
 
 /** 偏向高分的评分分布（真实评论平台大多是 4-5 星） */
 function randomRating(): 1 | 2 | 3 | 4 | 5 {
