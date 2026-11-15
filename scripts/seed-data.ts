@@ -4,10 +4,6 @@ import type {
   OpeningHours,
 } from "../src/lib/db/schema";
 
-/**
- * ⚠️ 全部是虚构的示范数据（店名、地址都是编的），只用来开发。
- * 上线前换成真实餐厅，或者在网站上清楚标明 "sample data"。
- */
 export type SeedRestaurant = {
   name: string;
   description: string;
@@ -79,7 +75,6 @@ export const REVIEW_TEMPLATES: Record<1 | 2 | 3 | 4 | 5, string[]> = {
 };
 
 export const SEED_RESTAURANTS: SeedRestaurant[] = [
-  // ── Kuala Lumpur ───────────────────────────────────────────
   {
     name: "Nasi Lemak Pak Mat Kampung Baru",
     description:
@@ -193,7 +188,6 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
     hours: "lunchDinner",
   },
 
-  // ── Selangor ───────────────────────────────────────────────
   {
     name: "SS2 Wantan Mee Corner",
     description:
@@ -335,7 +329,6 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
     hours: "lunchDinner",
   },
 
-  // ── Penang ─────────────────────────────────────────────────
   {
     name: "Lorong Char Koay Teow Uncle",
     description:
@@ -407,7 +400,6 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
     hours: "dinner",
   },
 
-  // ── Perak ──────────────────────────────────────────────────
   {
     name: "Ipoh Lama Bean Sprout Chicken",
     description:
@@ -451,7 +443,6 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
     hours: "allDay",
   },
 
-  // ── Melaka ─────────────────────────────────────────────────
   {
     name: "Jonker Chicken Rice Ball",
     description:
@@ -495,7 +486,6 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
     hours: "lunchDinner",
   },
 
-  // ── Johor ──────────────────────────────────────────────────
   {
     name: "JB Mee Rebus Corner",
     description:
@@ -539,7 +529,6 @@ export const SEED_RESTAURANTS: SeedRestaurant[] = [
     hours: "lunchDinner",
   },
 
-  // ── Sabah & Sarawak ────────────────────────────────────────
   {
     name: "Kota Kinabalu Tuaran Mee House",
     description:

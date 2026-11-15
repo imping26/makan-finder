@@ -8,7 +8,6 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    // migration 建议用 direct（非 pooled）连接；没设就退回 DATABASE_URL
     url: process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL!,
   },
   strict: true,

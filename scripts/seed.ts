@@ -1,10 +1,3 @@
-/**
- * npm run db:seed
- *
- * 清空 app 数据后重新写入示范数据。可以重复跑（idempotent）。
- * 注意：这里自己建 db 连接，不 import src/lib/db/index.ts，
- * 因为那个文件有 "server-only"，在 Next.js 以外执行会报错。
- */
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -25,7 +18,6 @@ if (!url) throw new Error("DATABASE_URL is not set in .env.local");
 const client = postgres(url, { prepare: false, max: 1 });
 const db = drizzle(client, { schema });
 
-/** 固定 seed 的随机数（mulberry32）→ 每次跑出来的评论都一样，方便写 E2E test */
 function rng(seed: number) {
   return () => {
     seed |= 0;
@@ -38,7 +30,6 @@ function rng(seed: number) {
 const rand = rng(2026);
 const pick = <T>(arr: readonly T[]) => arr[Math.floor(rand() * arr.length)];
 
-/** 偏向高分的评分分布（真实评论平台大多是 4-5 星） */
 function randomRating(): 1 | 2 | 3 | 4 | 5 {
   const r = rand();
   if (r < 0.45) return 5;
@@ -50,7 +41,6 @@ function randomRating(): 1 | 2 | 3 | 4 | 5 {
 
 async function main() {
   console.log("🧹 Clearing existing data…");
-  // 顺序很重要：先删有 foreign key 指向别人的表
   await db.delete(schema.favorites);
   await db.delete(schema.photos);
   await db.delete(schema.reviews);
@@ -86,7 +76,6 @@ async function main() {
   const reviewRows: (typeof schema.reviews.$inferInsert)[] = [];
   const now = Date.now();
   for (const { id: restaurantId } of inserted) {
-    // 每家 0-6 条评论，每个 user 最多一条（符合 unique index）
     const reviewers = [...SEED_USERS]
       .sort(() => rand() - 0.5)
       .slice(0, Math.floor(rand() * 7));

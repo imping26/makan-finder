@@ -11,7 +11,6 @@ type NavLinkProps = {
 export function NavLink({ href, children }: NavLinkProps) {
   const pathname = usePathname();
 
-  // 子路由也算 active；加 "/" 避免 /restaurants-map 误匹配 /restaurants
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
