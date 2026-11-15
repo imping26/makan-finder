@@ -35,5 +35,5 @@ export async function FavoriteSection({
 }
 
 export function FavoriteSkeleton() {
-  return <div className="h-8 w-20 animate-pulse rounded-md bg-muted" />;
+  return <div className="h-7 w-20 animate-pulse rounded-md bg-muted" />;
 }

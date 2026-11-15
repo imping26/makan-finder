@@ -126,7 +126,7 @@ async function RestaurantDetails({
             <RestaurantReviews restaurantId={restaurant.id} />
           </Suspense>
         </section>
-        <aside>
+        <aside className="order-first md:order-none">
           <h2 className="mb-2 text-lg font-semibold">Opening hours</h2>
           <OpeningHours hours={restaurant.openingHours} />
         </aside>
