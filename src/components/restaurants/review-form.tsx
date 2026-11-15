@@ -8,7 +8,7 @@ import {
   type ReviewFormState,
 } from "@/lib/validations/review";
 import { useActionState } from "react";
-import { deleteReview, saveReview } from "@/lib/actions/reviews";
+import { submitReview } from "@/lib/actions/reviews";
 
 type ReviewFormProps = {
   restaurantId: string;
@@ -18,10 +18,8 @@ type ReviewFormProps = {
 const initialState: ReviewFormState = { status: "idle" };
 
 export function ReviewForm({ restaurantId, defaultValues }: ReviewFormProps) {
-  const [state, formAction, pending] = useActionState(saveReview, initialState);
-
-  const [deleteState, deleteAction, deletePending] = useActionState(
-    deleteReview,
+  const [state, formAction, pending] = useActionState(
+    submitReview,
     initialState,
   );
 
@@ -91,7 +89,7 @@ export function ReviewForm({ restaurantId, defaultValues }: ReviewFormProps) {
 
       <div className="flex items-center gap-3">
         <Button type="submit" size="sm" disabled={pending}>
-          {pending ? "Saving…" : isEdit ? "Update review" : "Post review"}
+          {isEdit ? "Update review" : "Post review"}
         </Button>
 
         {isEdit && (
@@ -99,14 +97,15 @@ export function ReviewForm({ restaurantId, defaultValues }: ReviewFormProps) {
             type="submit"
             size="sm"
             variant="ghost"
-            formAction={deleteAction}
+            name="intent"
+            value="delete"
             formNoValidate
-            disabled={pending || deletePending}
+            disabled={pending}
             onClick={(e) => {
               if (!confirm("Delete your review?")) e.preventDefault();
             }}
           >
-            {deletePending ? "Deleting…" : "Delete"}
+            Delete
           </Button>
         )}
 
@@ -120,11 +119,6 @@ export function ReviewForm({ restaurantId, defaultValues }: ReviewFormProps) {
         >
           {state.message}
         </p>
-        {deleteState.status === "error" && (
-          <p aria-live="polite" className="text-sm text-destructive">
-            {deleteState.message}
-          </p>
-        )}
       </div>
     </form>
   );

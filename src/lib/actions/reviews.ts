@@ -25,7 +25,16 @@ async function recalculateRating(tx: Tx, restaurantId: string) {
     .where(eq(restaurants.id, restaurantId));
 }
 
-export async function saveReview(
+export async function submitReview(
+  prevState: ReviewFormState,
+  formData: FormData,
+): Promise<ReviewFormState> {
+  return formData.get("intent") === "delete"
+    ? deleteReview(prevState, formData)
+    : saveReview(prevState, formData);
+}
+
+async function saveReview(
   _prevState: ReviewFormState,
   formData: FormData,
 ): Promise<ReviewFormState> {
@@ -114,7 +123,7 @@ export async function saveReview(
   };
 }
 
-export async function deleteReview(
+async function deleteReview(
   _prevState: ReviewFormState,
   formData: FormData,
 ): Promise<ReviewFormState> {
@@ -176,5 +185,9 @@ export async function deleteReview(
   updateTag("restaurants");
   updateTag(`reviews:${user.id}`);
 
-  return { status: "success", message: "Review deleted" };
+  return {
+    status: "success",
+    message: "Review deleted",
+    values: { rating: 0, content: "" },
+  };
 }

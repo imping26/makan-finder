@@ -23,13 +23,7 @@ export async function ReviewFormSection({
 
   const myReview = await getMyReview(restaurantId);
 
-  return (
-    <ReviewForm
-      key={myReview ? "edit" : "new"}
-      restaurantId={restaurantId}
-      defaultValues={myReview}
-    />
-  );
+  return <ReviewForm restaurantId={restaurantId} defaultValues={myReview} />;
 }
 
 export function ReviewFormSkeleton() {
