@@ -1,7 +1,6 @@
 import { Star } from "lucide-react";
-import type { RestaurantDetail } from "@/lib/queries/restaurants";
+import type { RestaurantReview } from "@/lib/queries/reviews";
 
-// 固定 locale + timeZone：server 在哪个时区跑，显示的日期都一样
 const dateFormatter = new Intl.DateTimeFormat("en-MY", {
   day: "numeric",
   month: "short",
@@ -9,11 +8,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-MY", {
   timeZone: "Asia/Kuala_Lumpur",
 });
 
-export function ReviewList({
-  reviews,
-}: {
-  reviews: RestaurantDetail["reviews"];
-}) {
+export function ReviewList({ reviews }: { reviews: RestaurantReview[] }) {
   if (reviews.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">

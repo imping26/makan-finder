@@ -72,12 +72,6 @@ export async function getRestaurantBySlug(slug: string) {
   cacheTag(`restaurant:${slug}`);
   const restaurant = await db.query.restaurants.findFirst({
     where: (r, { and, eq }) => and(eq(r.slug, slug), eq(r.status, "approved")),
-    with: {
-      reviews: {
-        orderBy: (rv, { desc }) => [desc(rv.createdAt)],
-        with: { user: { columns: { name: true, image: true } } },
-      },
-    },
   });
 
   return restaurant ?? null;

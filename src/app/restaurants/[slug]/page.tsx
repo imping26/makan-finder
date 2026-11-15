@@ -1,9 +1,8 @@
 import { Suspense } from "react";
 import { RestaurantDetailsSkeleton } from "@/components/restaurants/restaurant-details-skeleton";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Star } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 import { OpeningHours } from "@/components/restaurants/opening-hours";
-import { ReviewList } from "@/components/restaurants/review-list";
 import { formatPriceRange, formatSlugLabel, truncate } from "@/lib/format";
 import {
   getAllRestaurantSlugs,
@@ -23,6 +22,12 @@ import {
   OpenNowBadge,
   OpenNowBadgeSkeleton,
 } from "@/components/restaurants/open-now-badge";
+import {
+  RatingSummary,
+  RatingSummarySkeleton,
+  RestaurantReviews,
+  RestaurantReviewsSkeleton,
+} from "@/components/restaurants/restaurant-reviews";
 
 export async function generateStaticParams() {
   return getAllRestaurantSlugs();
@@ -94,13 +99,10 @@ async function RestaurantDetails({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Star className="size-4 fill-amber-400 text-amber-400" />
-            <span className="text-foreground">
-              {restaurant.avgRating.toFixed(1)}
-            </span>
-            ({restaurant.reviewCount} reviews)
-          </span>
+          <Suspense fallback={<RatingSummarySkeleton />}>
+            <RatingSummary restaurantId={restaurant.id} />
+          </Suspense>
+
           <span>{formatSlugLabel(restaurant.cuisine)}</span>
           <span>{formatPriceRange(restaurant.priceRange)}</span>
           <span className="flex items-center gap-1">
@@ -120,7 +122,9 @@ async function RestaurantDetails({
             <ReviewFormSection restaurantId={restaurant.id} />
           </Suspense>
 
-          <ReviewList reviews={restaurant.reviews} />
+          <Suspense fallback={<RestaurantReviewsSkeleton />}>
+            <RestaurantReviews restaurantId={restaurant.id} />
+          </Suspense>
         </section>
         <aside>
           <h2 className="mb-2 text-lg font-semibold">Opening hours</h2>

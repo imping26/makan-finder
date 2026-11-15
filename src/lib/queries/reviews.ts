@@ -1,6 +1,10 @@
 import "server-only";
+import { eq } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
+import { connection } from "next/server";
+import { cache } from "react";
 import { db } from "@/lib/db";
+import { restaurants } from "@/lib/db/schema";
 import { getCurrentUser } from "@/lib/session";
 
 export async function getMyReview(restaurantId: string) {
@@ -12,7 +16,6 @@ export async function getMyReview(restaurantId: string) {
       and(eq(r.restaurantId, restaurantId), eq(r.userId, user.id)),
     columns: { rating: true, content: true },
   });
-
   return review ?? null;
 }
 
@@ -35,3 +38,29 @@ async function getReviewsByUserId(userId: string) {
 }
 
 export type MyReview = Awaited<ReturnType<typeof getMyReviews>>[number];
+
+export const getRestaurantReviews = cache(async (restaurantId: string) => {
+  await connection();
+
+  const [stats, reviews] = await Promise.all([
+    db
+      .select({
+        avgRating: restaurants.avgRating,
+        reviewCount: restaurants.reviewCount,
+      })
+      .from(restaurants)
+      .where(eq(restaurants.id, restaurantId))
+      .then(([row]) => row ?? { avgRating: 0, reviewCount: 0 }),
+    db.query.reviews.findMany({
+      where: (r, { eq }) => eq(r.restaurantId, restaurantId),
+      orderBy: (r, { desc }) => [desc(r.createdAt)],
+      with: { user: { columns: { name: true, image: true } } },
+    }),
+  ]);
+
+  return { ...stats, reviews };
+});
+
+export type RestaurantReview = Awaited<
+  ReturnType<typeof getRestaurantReviews>
+>["reviews"][number];
