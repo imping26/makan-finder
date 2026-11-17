@@ -26,6 +26,11 @@ export const restaurantSubmissionSchema = z.object({
 
 export type RestaurantSubmission = z.infer<typeof restaurantSubmissionSchema>;
 
+export const reviewSubmissionSchema = z.object({
+  restaurantId: z.uuid(),
+  intent: z.enum(["approve", "reject"]),
+});
+
 type SubmissionField = keyof RestaurantSubmission;
 
 export type SubmitRestaurantState = {
