@@ -11,6 +11,16 @@ export const E2E_USER = {
   email: "e2e@example.com",
 };
 
+export const ADMIN_STORAGE_STATE = "e2e/.auth/admin.json";
+
+export const E2E_ADMIN = {
+  id: "e2e-admin",
+  name: "E2E Admin",
+  email: "e2e-admin@example.com",
+};
+
+export const E2E_RESTAURANT_PREFIX = "E2E Test";
+
 export function getE2EDatabaseUrl() {
   const url =
     process.env.E2E_DATABASE_URL ??
