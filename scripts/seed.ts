@@ -15,6 +15,18 @@ config({ path: ".env.local" });
 const url = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
 if (!url) throw new Error("DATABASE_URL is not set in .env.local");
 
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
+const { hostname } = new URL(url);
+if (!LOCAL_HOSTS.has(hostname) && !process.argv.includes("--allow-remote")) {
+  console.error(
+    `Refusing to seed "${hostname}": this script deletes all app data first.\n` +
+      "If you really mean to reset a remote database, run:\n" +
+      "  npm run db:seed -- --allow-remote",
+  );
+  process.exit(1);
+}
+console.log(`🌱 Seeding database on ${hostname}`);
+
 const client = postgres(url, { prepare: false, max: 1 });
 const db = drizzle(client, { schema });
 
