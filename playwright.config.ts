@@ -39,6 +39,7 @@ export default defineConfig({
       E2E_DATABASE_URL: databaseUrl,
       BETTER_AUTH_SECRET: E2E_AUTH_SECRET,
       BETTER_AUTH_URL: E2E_BASE_URL,
+      AI_SEARCH_FAKE: "1",
     },
   },
 });
