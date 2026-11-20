@@ -29,3 +29,13 @@ export function parseRestaurantFilters(
 ): RestaurantFilters {
   return restaurantFiltersSchema.parse(searchParams);
 }
+
+export function filtersToSearchParams(filters: RestaurantFilters): string {
+  const params = new URLSearchParams();
+  if (filters.state) params.set("state", filters.state);
+  if (filters.cuisine) params.set("cuisine", filters.cuisine);
+  if (filters.priceRange) params.set("priceRange", String(filters.priceRange));
+  if (filters.halal) params.set("halal", "on");
+  if (filters.q) params.set("q", filters.q);
+  return params.toString();
+}

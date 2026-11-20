@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { parseRestaurantFilters } from "./restaurant-filters";
+import {
+  filtersToSearchParams,
+  parseRestaurantFilters,
+} from "./restaurant-filters";
 
 describe("parseRestaurantFilters", () => {
   it("returns no filters for an empty URL", () => {
@@ -55,5 +58,29 @@ describe("parseRestaurantFilters", () => {
 
   it("ignores a search query longer than 100 characters", () => {
     expect(parseRestaurantFilters({ q: "a".repeat(101) }).q).toBeUndefined();
+  });
+});
+
+describe("filtersToSearchParams", () => {
+  it("returns an empty string when there are no filters", () => {
+    expect(filtersToSearchParams({})).toBe("");
+  });
+
+  it("uses the same format as the filter form", () => {
+    expect(
+      filtersToSearchParams({ state: "penang", priceRange: 1, halal: true }),
+    ).toBe("state=penang&priceRange=1&halal=on");
+  });
+
+  it("round-trips through parseRestaurantFilters", () => {
+    const filters = {
+      state: "kuala-lumpur",
+      cuisine: "mamak",
+      priceRange: 2,
+      halal: true,
+      q: "Nasi Kandar & Co",
+    } as const;
+    const params = new URLSearchParams(filtersToSearchParams(filters));
+    expect(parseRestaurantFilters(Object.fromEntries(params))).toEqual(filters);
   });
 });

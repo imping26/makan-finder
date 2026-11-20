@@ -1,3 +1,4 @@
+import { AiSearchForm } from "@/components/restaurants/ai-search-form";
 import {
   FilterBar,
   FilterBarSkeleton,
@@ -10,6 +11,7 @@ import {
   PAGE_SIZE,
   type RestaurantFilters,
 } from "@/lib/queries/restaurants";
+import { getCurrentUser } from "@/lib/session";
 import { parseRestaurantFilters } from "@/lib/validations/restaurant-filters";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -19,6 +21,15 @@ export const metadata: Metadata = {
   title: "Restaurants",
 };
 
+async function AiSearchSection() {
+  const user = await getCurrentUser();
+  if (!user) {
+    return null;
+  }
+
+  return <AiSearchForm />;
+}
+
 export default function RestaurantsPage({
   searchParams,
 }: PageProps<"/restaurants">) {
@@ -27,6 +38,10 @@ export default function RestaurantsPage({
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">Restaurants</h1>
+
+      <Suspense fallback={null}>
+        <AiSearchSection />
+      </Suspense>
 
       <Suspense fallback={<FilterBarSkeleton />}>
         <FilterBar filtersPromise={filtersPromise} />
